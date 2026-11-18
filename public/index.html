@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>PikaTransfer</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/config.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="PikaTransfer home">
+        <span class="brand-icon">P</span>
+        <span><strong>PikaTransfer</strong><small>Peer-to-peer file transfer</small></span>
+      </a>
+      <div class="top-status"><span id="connectionDot" class="dot"></span><span id="connectionText">未接続</span></div>
+    </header>
+
+    <section id="loginPanel" class="panel login-panel">
+      <div class="eyebrow">WELCOME</div>
+      <h1>ファイルを、直接届けよう。</h1>
+      <p class="muted">サーバーにファイルを保管せず、接続したユーザー同士で転送します。</p>
+      <form id="loginForm" class="login-form">
+        <label>ユーザー名<input id="nameInput" maxlength="24" autocomplete="nickname" placeholder="例: Pika-PC" required></label>
+        <label>サーバーパスワード<input id="passwordInput" type="password" autocomplete="current-password" required></label>
+        <button class="primary" type="submit">サーバーに接続</button>
+        <p id="loginError" class="error" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="appPanel" class="workspace hidden">
+      <div class="welcome-row">
+        <div><div class="eyebrow">WORKSPACE</div><h1>ファイル転送</h1><p class="muted">オンラインの相手を選択して、直接転送できます。</p></div>
+        <button id="disconnectButton" class="quiet-button">切断</button>
+      </div>
+
+      <div class="mode-banner" id="modeBanner">
+        <span class="mode-icon">↗</span>
+        <div><strong id="modeTitle">互換モード</strong><p id="modeDescription">このブラウザではファイル選択APIが使えないため、受信したファイルのダウンロードのみ利用できます。</p></div>
+      </div>
+
+      <div class="columns">
+        <section class="panel people-panel">
+          <div class="section-heading"><div><div class="eyebrow">NETWORK</div><h2>接続ユーザー</h2></div><span id="userCount" class="count">0</span></div>
+          <ul id="userList" class="user-list"><li class="empty">まだ他のユーザーはいません。</li></ul>
+        </section>
+
+        <section class="panel transfer-panel">
+          <div class="section-heading"><div><div class="eyebrow">TRANSFER</div><h2>転送</h2></div><span id="transferState" class="pill">待機中</span></div>
+          <div id="targetHint" class="target-hint">左側から転送相手を選択してください。</div>
+          <div class="send-area">
+            <div class="file-symbol">↑</div>
+            <h3>ファイルを送信</h3>
+            <p class="muted">ファイル本体はWebRTCで相手に直接送られます。</p>
+            <button id="sendButton" class="primary" disabled>ファイルを選択</button>
+            <small id="sendHelp" class="muted">相手を選択すると送信できます。</small>
+          </div>
+          <div class="progress-wrap hidden" id="progressWrap">
+            <div class="progress-label"><span id="progressName">転送中</span><strong id="progressPercent">0%</strong></div>
+            <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+            <small id="progressDetail" class="muted"></small>
+          </div>
+          <div class="transfer-log"><h3>通知</h3><ul id="logList"><li class="empty">転送履歴はありません。</li></ul></div>
+        </section>
+      </div>
+      <footer>接続情報とユーザー名はサーバーで管理されます。ファイルの中身はサーバーを経由しません。</footer>
+    </section>
+  </main>
+</body>
+</html>
